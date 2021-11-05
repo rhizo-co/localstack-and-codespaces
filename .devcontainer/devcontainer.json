@@ -1,0 +1,37 @@
+{
+    "build": {
+        "dockerfile": "build/Dockerfile",
+        "context": "build",
+        "args": {
+            // Change the BASE_IMAGE to the codespaces image for your tech stack.
+            // N.b. only debian-based images are supported.
+            // Microsoft have a number of pre-defined images here: https://hub.docker.com/_/microsoft-vscode-devcontainers
+            "BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/base:debian"
+        }
+    },
+    "name": "localstack-and-codespaces",
+    "mounts": [
+        // mount the docker socket so that we can use the docker CLI to start localstack
+        "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+    ],
+    
+    "forwardPorts": [
+        // forward the localstack ports
+        4566,
+        4571,
+        // add ports that your application uses here
+        // e.g.
+        // 3000,
+        // 8080,
+        // 8443,
+    ],
+    "postStartCommand": [
+        // Run localstack in a background docker container when the codespace starts
+        "sudo", "docker", "run", "--rm", "-d", "--env-file", ".devcontainer/localstack.env", "-p", "4566:4566", "-p", "4571:4571", "${containerEnv:LOCALSTACK_DOCKER_IMAGE}"
+    ],
+    "shutdownAction": "stopContainer",
+    "containerEnv": {
+        // localstack docker image to use
+        "LOCALSTACK_DOCKER_IMAGE": "localstack/localstack:latest",
+    }
+}
