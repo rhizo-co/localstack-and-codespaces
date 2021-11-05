@@ -21,17 +21,22 @@
         4571,
         // add ports that your application uses here
         // e.g.
-        // 3000,
-        // 8080,
-        // 8443,
+        //3000,
+        //8080,
+        //8443,
     ],
     "postStartCommand": [
         // Run localstack in a background docker container when the codespace starts
-        "sudo", "docker", "run", "--rm", "-d", "--env-file", ".devcontainer/localstack.env", "-p", "4566:4566", "-p", "4571:4571", "${containerEnv:LOCALSTACK_DOCKER_IMAGE}"
+        // "sudo", // uncomment sudo if not running as root
+        "docker", "run", "--rm", "-d", "--env-file", ".devcontainer/localstack.env", "-p", "4566:4566", "-p", "4571:4571", "--mount", "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind", "localstack/localstack:latest"
     ],
     "shutdownAction": "stopContainer",
     "containerEnv": {
         // localstack docker image to use
         "LOCALSTACK_DOCKER_IMAGE": "localstack/localstack:latest",
+        // uncomment to set aws default config in the codespace
+        //"AWS_DEFAULT_REGION": "us-east-1",
+        //"AWS_ACCESS_KEY_ID": "test",
+        //"AWS_SECRET_ACCESS_KEY": "test",
     }
 }
