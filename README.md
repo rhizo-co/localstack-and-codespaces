@@ -2,11 +2,18 @@
 
 Simple example GitHub codespace that includes localstack and the AWS cli.
 
-## codespaces configuration
 
-The `.devcontainer/` directory contains the codespaces configuration and has its own README.
+## How does it work
 
-### Quick start
+When the codespace starts localstack docker container is automatically started in the background.
+
+
+### Configuring localstack
+
+localstack can be configured by setting environment variables in `.devcontainer/localstack.env`. Envivonment variables for localstack configuration are described [here](https://github.com/localstack/localstack#configuration).
+
+
+## Quick start
 
 [Create your own codespace](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace) for this repository.
 
@@ -25,3 +32,12 @@ For example:
  - nodejs `"BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/javascript-node:16-buster"`
  - go `"BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/go:1.17-buster"`
  - python  `"BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/python:3.9-buster"`
+
+
+## More information
+
+Each subdirectory has its own README file with more information for those who are interested.
+
+- The codespace setup and configuration is described in `.devcontainer/README.md` and `.devcontainer/build/README.md`.
+
+- The examples are described in `examples/README.md` and `examples/lambda/README.md`.
