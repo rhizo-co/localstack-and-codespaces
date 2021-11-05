@@ -6,7 +6,7 @@
             // Change the BASE_IMAGE to the codespaces image for your tech stack.
             // N.b. only debian-based images are supported.
             // Microsoft have a number of pre-defined images here: https://hub.docker.com/_/microsoft-vscode-devcontainers
-            "BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/base:debian"
+            "BASE_IMAGE": "mcr.microsoft.com/vscode/devcontainers/universal:linux"
         }
     },
     "name": "localstack-and-codespaces",
@@ -28,13 +28,12 @@
     "postStartCommand": [
         // Run localstack in a background docker container when the codespace starts
         // "sudo", // uncomment sudo if not running as root
-        "docker", "run", "--rm", "-d", "--env-file", ".devcontainer/localstack.env", "-p", "4566:4566", "-p", "4571:4571", "--mount", "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind", "localstack/localstack:latest"
+        "docker", "run", "--rm", "-d", "--env-file=.devcontainer/localstack.env", "-p=4566:4566", "-p=4571:4571", "--mount", "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind", "localstack/localstack:latest"
     ],
     "shutdownAction": "stopContainer",
     "containerEnv": {
-        // localstack docker image to use
-        "LOCALSTACK_DOCKER_IMAGE": "localstack/localstack:latest",
         // uncomment to set aws default config in the codespace
+        // n.b. these values are not applied inside the localstack container. To set env values for the localstack container edit the .devcontainer/localstack.env file
         //"AWS_DEFAULT_REGION": "us-east-1",
         //"AWS_ACCESS_KEY_ID": "test",
         //"AWS_SECRET_ACCESS_KEY": "test",

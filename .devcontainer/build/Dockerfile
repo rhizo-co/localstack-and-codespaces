@@ -15,12 +15,16 @@ ARG CLI_VERSION="latest"
 
 # Enable new "BUILDKIT" mode for Docker CLI
 ENV DOCKER_BUILDKIT=1
+ENV DOCKER_HOST=unix:///var/run/docker-host.sock
 
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
 ARG USERNAME=automatic
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+
+# Force root user
+USER root
 COPY library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \
     && apt-get install -y ca-certificates \

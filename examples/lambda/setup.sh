@@ -86,7 +86,7 @@ awslocal apigateway create-deployment \
 
 ENDPOINT=http://localhost:4566/restapis/${API_ID}/${STAGE}/_user_request_/HowMuchIsTheFish
 
-echo -e "\nAPI available at: curl -i -w '\n' ${ENDPOINT}\n"
+echo "API available at: curl -i -w '\n' ${ENDPOINT}"
 
-echo -e 'Testing GET: (this may take a few minutes because localstack has to start a new docker container to execute the lambda)\n'
+echo -e '\nTesting GET: (this may take a few minutes because localstack has to start a new docker container to execute the lambda)\n'
 curl -i -w '\n' ${ENDPOINT}
