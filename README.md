@@ -5,12 +5,7 @@ Simple example GitHub codespace that includes localstack and the AWS cli.
 
 ## How does it work
 
-When the codespace starts localstack docker container is automatically started in the background.
-
-
-### Configuring localstack
-
-localstack can be configured by setting environment variables in `.devcontainer/localstack.env`. Envivonment variables for localstack configuration are described [here](https://github.com/localstack/localstack#configuration).
+When the codespace starts up a localstack docker container is automatically started in the background - allowing you to reach localstack on `http://localhost:4566` as usual.
 
 
 ## Quick start
@@ -19,11 +14,18 @@ localstack can be configured by setting environment variables in `.devcontainer/
 
 Run the examples from the `examples/` directory to test interacting with localstack.
 
+## Configuration
+
+### localstack
+
+localstack can be configured by setting environment variables in `.devcontainer/localstack.env`. Envivonment variables for localstack configuration are described [here](https://github.com/localstack/localstack#configuration).
+
+
 ### Changing the base image 
 
 Currently devcontainer.json is set to use the `mcr.microsoft.com/vscode/devcontainers/universal:linux` container image as the basis of the codespace environment. This [universal image](https://github.com/microsoft/vscode-dev-containers/tree/main/containers/codespaces-linux) contains dependencies for development with a range of popular languages like Python, Node, PHP, Java, Go, C++, Ruby, Go, Rust and .NET Core/C#. 
 
-There are many other pre-built images that you can choose from for common tasks. The [Microsoft VS Code Docker Hub repository](https://hub.docker.com/_/microsoft-vscode-devcontainers) is a good place to find available containers. To use a different base image change the value of `build.args.BASE_IMAGE` in `.devcontainer/devcontainer.json` to the image that you want to use.
+The universal container is great but it's large and takes a while to start up. There are many other pre-built images that you can choose from for common tasks that usually start a bit faster. The [Microsoft VS Code Docker Hub repository](https://hub.docker.com/_/microsoft-vscode-devcontainers) is a good place to find available containers. To use a different base image change the value of `build.args.BASE_IMAGE` in `.devcontainer/devcontainer.json` to the image that you want to use.
 
 N.b. Only Debian or Ubuntu based images will work with the build scripts in `.devcontainer/build`
 
