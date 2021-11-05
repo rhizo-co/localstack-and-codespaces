@@ -38,7 +38,7 @@ For example:
 
 ## More information
 
-Each subdirectory has its own README file with more information for those who are interested.
+Each subdirectory has its own README file with a bit more information
 
 - The codespace setup and configuration is described in `.devcontainer/README.md` and `.devcontainer/build/README.md`.
 
