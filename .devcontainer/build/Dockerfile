@@ -39,6 +39,9 @@ RUN sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "aws
     && sudo ./aws/install \
     && sudo rm -rf ./aws awscliv2.zip
 
+# install awslocal (localstack client) using pip, but dont stress if we cannot because pip isn't always available
+RUN pip3 install awscli-local || pip install aws-cli-local || echo "unable to install awslocal, continuing without it"
+
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access to 
 # the Docker socket if "overrideCommand": false is set in devcontainer.json. 
 # The script will also execute CMD if you need to alter startup behaviors.
