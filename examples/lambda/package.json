@@ -1,0 +1,10 @@
+{
+  "name": "localhost-lambda-example",
+  "version": "1.0.0",
+  "description": "This is mostly copied from @crypticmind 's excellent gist https://gist.github.com/crypticmind/c75db15fd774fe8f53282c3ccbe3d7ad",
+  "main": "lambda.js",
+  "author": "eastlondoner",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.41.0"
+  }
+}

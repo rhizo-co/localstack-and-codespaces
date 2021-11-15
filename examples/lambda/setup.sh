@@ -4,15 +4,29 @@
 set -euo pipefail
 
 # configure aws
-aws configure
+
+if which awslocal; then
+    USE_AWSLOCAL="true"
+    echo "awslocal detected, using awslocal"
+else
+    USE_AWSLOCAL="false"
+    aws configure
+fi
 
 # create localstack alias
-function awslocal() {
-    aws --endpoint-url=http://localhost:4566 "$@"
+function awslocalstack() {
+    if [[ "${USE_AWSLOCAL}" == "true" ]]; then
+        awslocal "$@"
+    else
+        aws --endpoint-url=http://localhost:4566 "$@"
+    fi
 }
 
-# zip the lambda
-zip api-handler.zip lambda.js
+# install npm dependencies
+npm install
+
+# zip it all to create the lambda
+zip -r api-handler.zip lambda.js node_modules/
 
 API_NAME="${API_NAME:-api}"
 REGION=us-east-1
@@ -23,29 +37,29 @@ function fail() {
     exit $1
 }
 
-awslocal lambda create-function \
+awslocalstack lambda create-function \
     --region ${REGION} \
     --function-name ${API_NAME} \
-    --runtime nodejs8.10 \
+    --runtime nodejs14.x \
     --handler lambda.apiHandler \
     --memory-size 128 \
     --zip-file fileb://api-handler.zip \
-    --role arn:aws:iam::123456:role/irrelevant
+    --role "arn:aws:iam::123456:role/irrelevant"
 
 [ $? == 0 ] || fail 1 "Failed: AWS / lambda / create-function"
 
-LAMBDA_ARN=$(awslocal lambda list-functions --query "Functions[?FunctionName==\`${API_NAME}\`].FunctionArn" --output text --region ${REGION})
+LAMBDA_ARN=$(awslocalstack lambda list-functions --query "Functions[?FunctionName==\`${API_NAME}\`].FunctionArn" --output text --region ${REGION})
 
-awslocal apigateway create-rest-api \
+awslocalstack apigateway create-rest-api \
     --region ${REGION} \
     --name ${API_NAME}
 
 [ $? == 0 ] || fail 2 "Failed: AWS / apigateway / create-rest-api"
 
-API_ID=$(awslocal apigateway get-rest-apis --query "items[?name==\`${API_NAME}\`].id" --output text --region ${REGION})
-PARENT_RESOURCE_ID=$(awslocal apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/`].id' --output text --region ${REGION})
+API_ID=$(awslocalstack apigateway get-rest-apis --query "items[?name==\`${API_NAME}\`].id" --output text --region ${REGION})
+PARENT_RESOURCE_ID=$(awslocalstack apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/`].id' --output text --region ${REGION})
 
-awslocal apigateway create-resource \
+awslocalstack apigateway create-resource \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --parent-id ${PARENT_RESOURCE_ID} \
@@ -53,9 +67,9 @@ awslocal apigateway create-resource \
 
 [ $? == 0 ] || fail 3 "Failed: AWS / apigateway / create-resource"
 
-RESOURCE_ID=$(awslocal apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/{somethingId}`].id' --output text --region ${REGION})
+RESOURCE_ID=$(awslocalstack apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/{somethingId}`].id' --output text --region ${REGION})
 
-awslocal apigateway put-method \
+awslocalstack apigateway put-method \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --resource-id ${RESOURCE_ID} \
@@ -65,7 +79,7 @@ awslocal apigateway put-method \
 
 [ $? == 0 ] || fail 4 "Failed: AWS / apigateway / put-method"
 
-awslocal apigateway put-integration \
+awslocalstack apigateway put-integration \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --resource-id ${RESOURCE_ID} \
@@ -77,7 +91,7 @@ awslocal apigateway put-integration \
 
 [ $? == 0 ] || fail 5 "Failed: AWS / apigateway / put-integration"
 
-awslocal apigateway create-deployment \
+awslocalstack apigateway create-deployment \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --stage-name ${STAGE} \
