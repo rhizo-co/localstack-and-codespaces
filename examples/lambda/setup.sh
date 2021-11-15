@@ -3,13 +3,14 @@
 # make bash play nicely
 set -euo pipefail
 
-# configure aws
-
+# Check which aws cli we can use
 if which awslocal; then
     USE_AWSLOCAL="true"
     echo "awslocal detected, using awslocal"
 else
     USE_AWSLOCAL="false"
+    # configure aws then
+    echo -e '\nConfigure AWS \nn.b. With localstack it is fine to use "test" for the Access Key ID and Secret Access Key\n'
     aws configure
 fi
 
