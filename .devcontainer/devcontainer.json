@@ -28,7 +28,7 @@
     "postStartCommand": [
         // Run localstack in a background docker container when the codespace starts
         // "sudo", // uncomment sudo if not running as root
-        "docker", "run", "--rm", "-d", "--env-file=.devcontainer/localstack.env", "-p=4566:4566", "-p=4571:4571", "--mount", "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind", "localstack/localstack:latest"
+        "docker", "run", "--init", "--rm", "-d", "--env-file=.devcontainer/localstack.env", "-p=4566:4566", "-p=4571:4571", "--mount", "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind", "localstack/localstack:latest"
     ],
     "shutdownAction": "stopContainer",
     "containerEnv": {
